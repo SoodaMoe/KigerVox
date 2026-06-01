@@ -1,0 +1,115 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 420" width="900" height="420">
+  <defs>
+    <linearGradient id="miniGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#07C160"/>
+      <stop offset="100%" style="stop-color:#05A050"/>
+    </linearGradient>
+    <linearGradient id="serverGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#3B82F6"/>
+      <stop offset="100%" style="stop-color:#2563EB"/>
+    </linearGradient>
+    <linearGradient id="cloudGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#8B5CF6"/>
+      <stop offset="100%" style="stop-color:#6D28D9"/>
+    </linearGradient>
+    <linearGradient id="arrowGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#07C160"/>
+      <stop offset="100%" style="stop-color:#3B82F6"/>
+    </linearGradient>
+    <linearGradient id="arrowGrad2" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#3B82F6"/>
+      <stop offset="100%" style="stop-color:#8B5CF6"/>
+    </linearGradient>
+    <marker id="arrowGreen" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <path d="M0,0 L8,3 L0,6 Z" fill="#05A050"/>
+    </marker>
+    <marker id="arrowBlue" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <path d="M0,0 L8,3 L0,6 Z" fill="#2563EB"/>
+    </marker>
+    <marker id="arrowPurple" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <path d="M0,0 L8,3 L0,6 Z" fill="#6D28D9"/>
+    </marker>
+  </defs>
+
+  <!-- Background -->
+  <rect x="0" y="0" width="900" height="420" rx="16" fill="#F8FAFC"/>
+  <rect x="0" y="0" width="900" height="420" rx="16" fill="none" stroke="#E2E8F0" stroke-width="1.5"/>
+
+  <!-- ── WeChat Mini Program Box ── -->
+  <rect x="28" y="100" width="220" height="220" rx="14" fill="white" stroke="#07C160" stroke-width="2"/>
+  <rect x="28" y="100" width="220" height="48" rx="14" fill="url(#miniGrad)"/>
+  <rect x="28" y="134" width="220" height="14" fill="url(#miniGrad)"/>
+  <text x="138" y="130" text-anchor="middle" font-family="'Segoe UI',Arial,sans-serif" font-size="16" font-weight="700" fill="white">微信小程序</text>
+
+  <!-- Mini boxes -->
+  <rect x="44" y="168" width="86" height="36" rx="6" fill="#F0FDF4"/>
+  <text x="87" y="190" text-anchor="middle" font-family="'Segoe UI',Arial,sans-serif" font-size="12" fill="#166534">TTS 引擎</text>
+
+  <rect x="140" y="168" width="86" height="36" rx="6" fill="#F0FDF4"/>
+  <text x="183" y="190" text-anchor="middle" font-family="'Segoe UI',Arial,sans-serif" font-size="12" fill="#166534">HMAC 签名</text>
+
+  <rect x="44" y="214" width="182" height="36" rx="6" fill="#FEF3C7"/>
+  <text x="135" y="236" text-anchor="middle" font-family="'Segoe UI',Arial,sans-serif" font-size="11" fill="#92400E">客户端缓存 (LRU 30MB)</text>
+
+  <rect x="44" y="260" width="182" height="40" rx="6" fill="#DBEAFE"/>
+  <text x="135" y="285" text-anchor="middle" font-family="'Segoe UI',Arial,sans-serif" font-size="11" fill="#1E40AF">域: kiger.sooda.moe</text>
+
+  <!-- ── Python Server Box ── -->
+  <rect x="340" y="100" width="220" height="220" rx="14" fill="white" stroke="#3B82F6" stroke-width="2"/>
+  <rect x="340" y="100" width="220" height="48" rx="14" fill="url(#serverGrad)"/>
+  <rect x="340" y="134" width="220" height="14" fill="url(#serverGrad)"/>
+  <text x="450" y="130" text-anchor="middle" font-family="'Segoe UI',Arial,sans-serif" font-size="16" font-weight="700" fill="white">Python 服务端</text>
+
+  <rect x="356" y="168" width="86" height="36" rx="6" fill="#EFF6FF"/>
+  <text x="399" y="184" text-anchor="middle" font-family="'Segoe UI',Arial,sans-serif" font-size="11" fill="#1E40AF">/api/tts</text>
+  <text x="399" y="199" text-anchor="middle" font-family="'Segoe UI',Arial,sans-serif" font-size="9" fill="#60A5FA">默认合成</text>
+
+  <rect x="452" y="168" width="86" height="36" rx="6" fill="#EFF6FF"/>
+  <text x="495" y="184" text-anchor="middle" font-family="'Segoe UI',Arial,sans-serif" font-size="11" fill="#1E40AF">/api/proxy</text>
+  <text x="495" y="199" text-anchor="middle" font-family="'Segoe UI',Arial,sans-serif" font-size="9" fill="#60A5FA">自定义代理</text>
+
+  <rect x="356" y="214" width="182" height="36" rx="6" fill="#FEF3C7"/>
+  <text x="447" y="236" text-anchor="middle" font-family="'Segoe UI',Arial,sans-serif" font-size="11" fill="#92400E">服务端缓存 (LRU 5GB)</text>
+
+  <rect x="356" y="260" width="182" height="40" rx="6" fill="#EDE9FE"/>
+  <text x="447" y="282" text-anchor="middle" font-family="'Segoe UI',Arial,sans-serif" font-size="11" fill="#5B21B6">ffmpeg AAC 32kbps 转码</text>
+
+  <!-- ── Tencent Cloud Box ── -->
+  <rect x="652" y="100" width="220" height="220" rx="14" fill="white" stroke="#8B5CF6" stroke-width="2"/>
+  <rect x="652" y="100" width="220" height="48" rx="14" fill="url(#cloudGrad)"/>
+  <rect x="652" y="134" width="220" height="14" fill="url(#cloudGrad)"/>
+  <text x="762" y="130" text-anchor="middle" font-family="'Segoe UI',Arial,sans-serif" font-size="16" font-weight="700" fill="white">腾讯云 TTS</text>
+
+  <rect x="668" y="168" width="188" height="36" rx="6" fill="#F5F3FF"/>
+  <text x="762" y="190" text-anchor="middle" font-family="'Segoe UI',Arial,sans-serif" font-size="12" fill="#6D28D9">TC3-HMAC-SHA256 签名</text>
+
+  <rect x="668" y="214" width="188" height="36" rx="6" fill="#F5F3FF"/>
+  <text x="762" y="236" text-anchor="middle" font-family="'Segoe UI',Arial,sans-serif" font-size="12" fill="#6D28D9">精品音色 · 7 种女声</text>
+
+  <rect x="668" y="260" width="188" height="40" rx="6" fill="#F5F3FF"/>
+  <text x="762" y="278" text-anchor="middle" font-family="'Segoe UI',Arial,sans-serif" font-size="11" fill="#6D28D9">Codec: mp3 → AAC 转码</text>
+  <text x="762" y="294" text-anchor="middle" font-family="'Segoe UI',Arial,sans-serif" font-size="9" fill="#A78BFA">Volume: 5 &nbsp; Speed: 可调</text>
+
+  <!-- ── Arrows (Left ↔ Middle) ── -->
+  <line x1="248" y1="160" x2="338" y2="160" stroke="#05A050" stroke-width="2.5" marker-end="url(#arrowGreen)"/>
+  <line x1="338" y1="178" x2="248" y2="178" stroke="#2563EB" stroke-width="2.5" marker-end="url(#arrowBlue)"/>
+  <text x="293" y="148" text-anchor="middle" font-family="'Segoe UI',Arial,sans-serif" font-size="9" fill="#05A050">HTTPS 请求</text>
+  <text x="293" y="196" text-anchor="middle" font-family="'Segoe UI',Arial,sans-serif" font-size="9" fill="#2563EB">AAC 音频</text>
+
+  <!-- ── Arrows (Middle ↔ Right) ── -->
+  <line x1="560" y1="160" x2="650" y2="160" stroke="#2563EB" stroke-width="2.5" marker-end="url(#arrowBlue)"/>
+  <line x1="650" y1="178" x2="560" y2="178" stroke="#6D28D9" stroke-width="2.5" marker-end="url(#arrowPurple)"/>
+  <text x="605" y="148" text-anchor="middle" font-family="'Segoe UI',Arial,sans-serif" font-size="9" fill="#2563EB">TC3 签名</text>
+  <text x="605" y="196" text-anchor="middle" font-family="'Segoe UI',Arial,sans-serif" font-size="9" fill="#6D28D9">Base64 MP3</text>
+
+  <!-- ── Alibaba Cloud / Custom proxy (below) ── -->
+  <rect x="44" y="350" width="216" height="48" rx="8" fill="white" stroke="#D1D5DB" stroke-width="1"/>
+  <text x="152" y="370" text-anchor="middle" font-family="'Segoe UI',Arial,sans-serif" font-size="11" fill="#6B7280">阿里云 TTS / 自定义 HTTP</text>
+  <text x="152" y="386" text-anchor="middle" font-family="'Segoe UI',Arial,sans-serif" font-size="9" fill="#9CA3AF">直连或通过 /api/proxy-tts 代理</text>
+
+  <line x1="152" y1="350" x2="152" y2="322" stroke="#D1D5DB" stroke-width="1.5" stroke-dasharray="4,3"/>
+
+  <!-- Legend / bottom bar -->
+  <rect x="340" y="355" width="532" height="36" rx="6" fill="#F1F5F9"/>
+  <text x="355" y="377" font-family="'Segoe UI',Arial,sans-serif" font-size="11" fill="#64748B">全部走 HTTPS · 小程序仅需添加 kiger.sooda.moe 到可信域名</text>
+</svg>

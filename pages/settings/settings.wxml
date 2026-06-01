@@ -1,0 +1,129 @@
+<view class="container">
+  <!-- ── Provider selector ── -->
+  <view class="section">
+    <view class="section-title">TTS 供应商</view>
+    <picker mode="selector" range="{{providers}}" value="{{providerIndex}}" bindchange="onProviderChange">
+      <view class="picker">
+        <text>{{providers[providerIndex]}}</text>
+        <text class="picker-arrow">></text>
+      </view>
+    </picker>
+  </view>
+
+  <!-- ═══════════ 默认服务器 ═══════════ -->
+  <block wx:if="{{provider === 'server'}}">
+    <view class="section">
+      <view class="section-title">默认模式</view>
+      <view class="section-hint">无需任何配置，直接使用服务器提供的默认语音。音频会自动缓存到本地，相同内容只生成一次。</view>
+    </view>
+
+    <view class="section"><view class="field-label">语速：{{speed >= 0 ? '+' : ''}}{{speed}}</view>
+      <slider min="-2" max="2" step="0.5" value="{{speed}}" bindchange="onSpeedChange" activeColor="#07C160" block-size="20"/>
+      <view class="slider-labels"><text>慢 (-2)</text><text>正常 (0)</text><text>快 (+2)</text></view></view>
+  </block>
+
+  <!-- ═══════════ 腾讯云 ═══════════ -->
+  <block wx:if="{{provider === 'tencent'}}">
+    <view class="section">
+      <view class="section-title">腾讯云 API 密钥</view>
+      <view class="section-hint">请前往腾讯云控制台获取 API 密钥，开通语音合成后领取精品音色免费额度。</view>
+      <view class="link-row" bindtap="onOpenTencentConsole">
+        <text class="link-text">复制腾讯云 TTS 控制台链接</text>
+        <text class="link-arrow">></text>
+      </view>
+    </view>
+
+    <view class="section"><view class="field-label">SecretId</view>
+      <input class="input" value="{{secretId}}" bindinput="onTcSecretId" placeholder="请输入 SecretId"/></view>
+
+    <view class="section"><view class="field-label">SecretKey</view>
+      <view class="input-wrap">
+        <input class="input input-flex" value="{{secretKey}}" bindinput="onTcSecretKey" placeholder="请输入 SecretKey" password="{{!showKey}}"/>
+        <view class="toggle-btn" bindtap="onTcToggleKey"><text>{{showKey ? '隐藏' : '显示'}}</text></view>
+      </view></view>
+
+    <view class="section"><view class="field-label">音色选择</view>
+      <picker mode="selector" range="{{tcVoiceList}}" range-key="name" value="{{tcVoiceIndex}}" bindchange="onTcVoiceChange">
+        <view class="picker"><text>{{tcVoiceList[tcVoiceIndex].name}}</text><text class="picker-arrow">></text></view>
+      </picker></view>
+
+    <view class="section"><view class="field-label">语速：{{speed >= 0 ? '+' : ''}}{{speed}}</view>
+      <slider min="-2" max="2" step="0.5" value="{{speed}}" bindchange="onSpeedChange" activeColor="#07C160" block-size="20"/>
+      <view class="slider-labels"><text>慢 (-2)</text><text>正常 (0)</text><text>快 (+2)</text></view></view>
+  </block>
+
+  <!-- ═══════════ 阿里云 ═══════════ -->
+  <block wx:if="{{provider === 'aliyun'}}">
+    <view class="section">
+      <view class="section-title">阿里云 API 密钥</view>
+      <view class="section-hint">需要 AccessKey ID/Secret 和智能语音交互项目的 AppKey。Token 自动获取并缓存。</view>
+      <view class="link-row" bindtap="onOpenAliyunConsole">
+        <text class="link-text">复制阿里云语音交互控制台链接</text>
+        <text class="link-arrow">></text>
+      </view>
+    </view>
+
+    <view class="section"><view class="field-label">AccessKey ID</view>
+      <input class="input" value="{{aliKeyId}}" bindinput="onAliKeyId" placeholder="请输入 AccessKey ID"/></view>
+
+    <view class="section"><view class="field-label">AccessKey Secret</view>
+      <view class="input-wrap">
+        <input class="input input-flex" value="{{aliKeySecret}}" bindinput="onAliKeySecret" placeholder="请输入 AccessKey Secret" password="{{!showAliKey}}"/>
+        <view class="toggle-btn" bindtap="onAliToggleKey"><text>{{showAliKey ? '隐藏' : '显示'}}</text></view>
+      </view></view>
+
+    <view class="section"><view class="field-label">AppKey</view>
+      <input class="input" value="{{aliAppKey}}" bindinput="onAliAppKey" placeholder="请输入智能语音交互项目 AppKey"/></view>
+
+    <view class="section"><view class="field-label">音色选择</view>
+      <picker mode="selector" range="{{aliVoiceList}}" range-key="name" value="{{aliVoiceIndex}}" bindchange="onAliVoiceChange">
+        <view class="picker"><text>{{aliVoiceList[aliVoiceIndex].name}}</text><text class="picker-arrow">></text></view>
+      </picker></view>
+
+    <view class="section"><view class="field-label">语速：{{speed >= 0 ? '+' : ''}}{{speed}}</view>
+      <slider min="-2" max="2" step="0.5" value="{{speed}}" bindchange="onSpeedChange" activeColor="#07C160" block-size="20"/>
+      <view class="slider-labels"><text>慢 (-2)</text><text>正常 (0)</text><text>快 (+2)</text></view></view>
+  </block>
+
+  <!-- ═══════════ 自定义 ═══════════ -->
+  <block wx:if="{{provider === 'custom'}}">
+    <view class="section">
+      <view class="section-title">自定义 API 配置</view>
+      <view class="section-hint">支持任意 HTTP TTS 服务。使用 {text} {voice} {speed} 作为占位符。</view>
+    </view>
+
+    <view class="section"><view class="field-label">请求方式</view>
+      <view class="method-tabs">
+        <view class="method-tab {{apiMethod === 'POST' ? 'method-active' : ''}}" bindtap="onApiMethod" data-value="POST">POST</view>
+        <view class="method-tab {{apiMethod === 'GET' ? 'method-active' : ''}}" bindtap="onApiMethod" data-value="GET">GET</view>
+      </view></view>
+
+    <view class="section"><view class="field-label">API 地址</view>
+      <input class="input" value="{{apiUrl}}" bindinput="onApiUrl" placeholder="https://api.example.com/tts"/></view>
+
+    <view class="section"><view class="field-label">自定义 Headers（JSON，可选）</view>
+      <textarea class="textarea" value="{{apiHeaders}}" bindinput="onApiHeaders" placeholder='{"Authorization":"Bearer xxx"}'/></view>
+
+    <view class="section" wx:if="{{apiMethod === 'POST'}}"><view class="field-label">请求体模板</view>
+      <textarea class="textarea" value="{{apiBodyTemplate}}" bindinput="onApiBody"/></view>
+
+    <view class="section"><view class="field-label">语速：{{speed >= 0 ? '+' : ''}}{{speed}}</view>
+      <slider min="-2" max="2" step="0.5" value="{{speed}}" bindchange="onSpeedChange" activeColor="#07C160" block-size="20"/>
+      <view class="slider-labels"><text>慢 (-2)</text><text>正常 (0)</text><text>快 (+2)</text></view></view>
+  </block>
+
+  <!-- ── Buttons ── -->
+  <view class="btn-group">
+    <button class="btn btn-test" bindtap="onTest" loading="{{testing}}" disabled="{{testing}}">{{testing ? '测试中...' : '测试播放'}}</button>
+    <button class="btn btn-save" bindtap="onSave">保存设置</button>
+  </view>
+
+  <!-- ── Cache ── -->
+  <view class="cache-section">
+    <view class="cache-title">本地缓存</view>
+    <view class="cache-info">
+      <text class="cache-stat">{{cacheSize}} / {{cacheCount}} 条</text>
+    </view>
+    <button class="btn cache-btn" bindtap="onClearCache">清除缓存</button>
+  </view>
+</view>

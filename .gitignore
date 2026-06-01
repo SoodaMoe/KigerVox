@@ -1,0 +1,9 @@
+﻿.claude/
+project.config.json
+project.private.config.json
+node_modules/
+miniprogram_npm/
+*.pyc
+__pycache__/
+.DS_Store
+Thumbs.db

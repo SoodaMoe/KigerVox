@@ -1,0 +1,86 @@
+<view class="container">
+  <view class="header">
+    <view class="header-title" bindlongpress="onHeaderLongPress">{{headerTitle}}</view>
+    <view class="header-subtitle">{{headerSubtitle}}</view>
+  </view>
+
+  <view class="toolbar">
+    <view class="toolbar-btn" bindtap="onOpenSettings">
+      <text class="toolbar-text">API 设置</text>
+    </view>
+  </view>
+
+  <view class="image-section">
+    <view class="image-btn {{imgSrc ? 'image-btn-active' : ''}}" bindtap="onImageTap" bindlongpress="onImageLongPress">
+      <view class="image-btn-left">
+        <text class="image-btn-label">{{imgLabel || '图片'}}</text>
+      </view>
+      <text class="image-btn-hint">短按显示；长按修改</text>
+    </view>
+  </view>
+
+  <view class="button-grid">
+    <view
+      class="btn-card {{speakingIndex === index ? 'btn-speaking' : ''}}"
+      wx:for="{{buttons}}"
+      wx:key="id"
+      bindtap="onPlayText"
+      bindlongpress="onEditButton"
+      data-index="{{index}}"
+    >
+      <view class="btn-card-body">
+        <text class="btn-text">{{item.text}}</text>
+      </view>
+      <view class="btn-card-footer">
+        <text class="btn-hint {{item.silent ? 'btn-hint-silent' : ''}}">{{item.silent ? '点击显示' : '点击播放'}}</text>
+      </view>
+    </view>
+
+    <view class="btn-card btn-add" bindtap="onAddButton">
+      <view class="btn-card-body">
+        <text class="add-icon">+</text>
+      </view>
+      <view class="btn-card-footer">
+        <text class="btn-hint">添加按钮</text>
+      </view>
+    </view>
+
+  </view>
+
+  <view class="footer">
+    <text class="footer-text">长按按钮可编辑或删除</text>
+  </view>
+</view>
+
+<view class="overlay" wx:if="{{showOverlay}}" bindtap="onOverlayTap">
+  <view class="overlay-text">{{overlayText}}</view>
+  <view class="overlay-hint">点击任意位置返回</view>
+</view>
+
+<view class="modal-mask" wx:if="{{showModal}}" bindtap="onModalCancel"></view>
+<view class="modal" wx:if="{{showModal}}">
+  <view class="modal-header">
+    <text class="modal-title">编辑按钮文字</text>
+  </view>
+  <view class="modal-body">
+    <input
+      class="modal-input"
+      value="{{editingText}}"
+      bindinput="onTextInput"
+      placeholder="请输入按钮文字"
+      maxlength="50"
+      focus="{{true}}"
+      confirm-type="done"
+      bindconfirm="onModalConfirm"
+    />
+  </view>
+  <view class="modal-footer">
+    <button class="modal-btn modal-btn-cancel" bindtap="onModalCancel">取消</button>
+    <button class="modal-btn modal-btn-confirm" bindtap="onModalConfirm">确定</button>
+  </view>
+</view>
+
+<view class="image-overlay" wx:if="{{showImage}}" bindtap="onImageClose" bindlongpress="onImageChange">
+  <image class="image-overlay-img" src="{{imgSrc}}" mode="aspectFit" />
+  <view class="image-overlay-hint">点击任意位置返回 | 长按更换图片</view>
+</view>

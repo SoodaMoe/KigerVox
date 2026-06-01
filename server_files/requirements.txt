@@ -1,0 +1,2 @@
+# No external dependencies required — uses Python 3.12 stdlib only.
+# (base64, hashlib, hmac, json, http.server, pathlib, urllib)
