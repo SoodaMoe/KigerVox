@@ -84,3 +84,65 @@
   <image class="image-overlay-img" src="{{imgSrc}}" mode="aspectFit" />
   <view class="image-overlay-hint">点击任意位置返回 | 长按更换图片</view>
 </view>
+
+<!-- ═══ New User Guide ═══ -->
+<view class="guide-mask" wx:if="{{guideStep >= 0}}" catchtap="onGuideNext">
+
+  <!-- Step 0: prompt -->
+  <view class="guide-dialog" wx:if="{{guideStep === 0}}" catchtap="noop">
+    <view class="guide-dialog-title">新手指引</view>
+    <view class="guide-dialog-body">检测到你是第一次使用，是否需要新手指引？</view>
+    <view class="guide-dialog-btns">
+      <button class="guide-btn guide-btn-no" bindtap="onGuideNo">跳过</button>
+      <button class="guide-btn guide-btn-yes" bindtap="onGuideYes">开始指引</button>
+    </view>
+  </view>
+
+  <!-- Step 1: text buttons -->
+  <view class="guide-spotlight guide-s1" wx:if="{{guideStep === 1}}" catchtap="onGuideNext">
+    <view class="guide-highlight guide-hl-wide"></view>
+    <view class="guide-bubble guide-bubble-center">
+      <text>在这里你可以</text>
+      <text class="guide-em">新建按钮</text>
+      <text>，点击按钮可以</text>
+      <text class="guide-em">语音朗读</text>
+      <text>文字；</text>
+      <text class="guide-em">长按</text>
+      <text>按钮可以修改文字或切换静音模式。</text>
+    </view>
+    <view class="guide-footer">轻触任意位置继续</view>
+  </view>
+
+  <!-- Step 2: image button -->
+  <view class="guide-spotlight guide-s2" wx:if="{{guideStep === 2}}" catchtap="onGuideNext">
+    <view class="guide-highlight guide-hl-row"></view>
+    <view class="guide-bubble guide-bubble-bottom">
+      <text>在这里长按可以选择一张你的</text>
+      <text class="guide-em">扩列图</text>
+      <text>，单击这里就能展示</text>
+    </view>
+    <view class="guide-footer">轻触任意位置继续</view>
+  </view>
+
+  <!-- Step 3: header title -->
+  <view class="guide-spotlight guide-s3" wx:if="{{guideStep === 3}}" catchtap="onGuideNext">
+    <view class="guide-highlight guide-hl-top"></view>
+    <view class="guide-bubble guide-bubble-below">
+      <text>长按这里可以把文字修改为自己的</text>
+      <text class="guide-em">CN</text>
+    </view>
+    <view class="guide-footer">轻触任意位置继续</view>
+  </view>
+
+  <!-- Step 4: API settings -->
+  <view class="guide-spotlight guide-s4" wx:if="{{guideStep === 4}}" catchtap="onGuideNext">
+    <view class="guide-highlight guide-hl-settings"></view>
+    <view class="guide-bubble guide-bubble-left">
+      <text>在这里可以配置</text>
+      <text class="guide-em">自己的 TTS API</text>
+      <text>，支持腾讯云、阿里云和自定义接口。</text>
+    </view>
+    <view class="guide-footer">轻触任意位置开始使用</view>
+  </view>
+
+</view>

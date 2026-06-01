@@ -13,8 +13,9 @@ Page({
     imgSrc: '',
     imgLabel: '',
     showImage: false,
-    headerTitle: '文字转语音',
-    headerSubtitle: '点击按钮，用语音播放文字'
+    headerTitle: 'KigerVox',
+    headerSubtitle: '点击按钮，用语音播放文字',
+    guideStep: -1
   },
 
   audioCtx: null,
@@ -23,6 +24,7 @@ Page({
     this.loadButtons()
     this.loadImage()
     this.loadHeader()
+    this.checkGuide()
     this.audioCtx = wx.createInnerAudioContext()
     this.audioCtx.onEnded(() => {
       this.setData({ speakingIndex: -1 })
@@ -182,9 +184,36 @@ Page({
     wx.navigateTo({ url: '/pages/settings/settings' })
   },
 
+  // ─── Guide ─────────────────────────────────
+  checkGuide() {
+    var done = wx.getStorageSync('guideDone')
+    if (!done) {
+      this.setData({ guideStep: 0 })
+    }
+  },
+
+  onGuideYes() {
+    this.setData({ guideStep: 1 })
+  },
+
+  onGuideNo() {
+    wx.setStorageSync('guideDone', true)
+    this.setData({ guideStep: -1 })
+  },
+
+  onGuideNext() {
+    var step = this.data.guideStep
+    if (step >= 4) {
+      wx.setStorageSync('guideDone', true)
+      this.setData({ guideStep: -1 })
+    } else {
+      this.setData({ guideStep: step + 1 })
+    }
+  },
+
   // ─── Header ────────────────────────────────
   loadHeader() {
-    var title = wx.getStorageSync('headerTitle') || '文字转语音'
+    var title = wx.getStorageSync('headerTitle') || 'KigerVox'
     this.setData({ headerTitle: title })
   },
 
