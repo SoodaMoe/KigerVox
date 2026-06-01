@@ -317,21 +317,22 @@
 }
 
 /* ═══════ New User Guide ═══════ */
+
+/* ── Step 0: fullscreen dialog mask ─ */
 .guide-mask {
   position: fixed;
   top: 0; left: 0; right: 0; bottom: 0;
-  background: rgba(0, 0, 0, 0.88);
+  background: rgba(0, 0, 0, 0.8);
   z-index: 5000;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-/* ── Step 0: dialog ──────────────── */
 .guide-dialog {
   width: 560rpx;
   background: #fff;
-  border-radius: 20rpx;
+  border-radius: 24rpx;
   padding: 48rpx 40rpx 36rpx;
   text-align: center;
 }
@@ -356,6 +357,7 @@
   justify-content: center;
 }
 
+/* ── Shared button styles ────────── */
 .guide-btn {
   width: 200rpx;
   height: 76rpx;
@@ -377,88 +379,72 @@
   color: #fff;
 }
 
-/* ── Steps 1-4: fullscreen with spotlight ── */
-.guide-step {
+/* ── Bottom card (steps 1-4) ──────── */
+.guide-card {
   position: fixed;
-  top: 0; left: 0; right: 0; bottom: 0;
+  left: 0; right: 0; bottom: 0;
   z-index: 5000;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
 }
 
-/* ── Spotlight punch-out ─────────── */
-.guide-spot {
-  position: absolute;
-  border: 5rpx solid #07C160;
-  border-radius: 16rpx;
-  background: rgba(255, 255, 255, 0.06);
-  box-shadow: 0 0 0 999rpx rgba(0, 0, 0, 0.88);
-  animation: guide-pulse 1.5s ease-in-out infinite;
+.guide-card-blocker {
+  flex: 1;
+  background: rgba(0, 0, 0, 0.35);
 }
 
-@keyframes guide-pulse {
-  0%, 100% { border-color: #07C160; }
-  50% { border-color: #4AE084; }
-}
-
-/* Step 1: button grid */
-.guide-spot-btns {
-  top: 400rpx; left: 24rpx; right: 24rpx;
-  height: 400rpx;
-  border-radius: 24rpx;
-}
-
-/* Step 2: image button row */
-.guide-spot-img {
-  top: 310rpx; left: 24rpx; right: 24rpx;
-  height: 110rpx;
-  border-radius: 20rpx;
-}
-
-/* Step 3: header title */
-.guide-spot-title {
-  top: 148rpx; left: 120rpx;
-  width: 510rpx; height: 70rpx;
-  border-radius: 14rpx;
-}
-
-/* Step 4: settings button */
-.guide-spot-settings {
-  top: 268rpx; right: 24rpx;
-  width: 210rpx; height: 66rpx;
-  border-radius: 34rpx;
-}
-
-/* ── Tip bubble ───────────────────── */
-.guide-tip {
-  position: absolute;
+.guide-card-inner {
   background: #fff;
-  border-radius: 16rpx;
-  padding: 24rpx 36rpx;
-  font-size: 28rpx;
-  color: #333;
-  line-height: 1.7;
+  border-radius: 32rpx 32rpx 0 0;
+  padding: 40rpx 40rpx 32rpx;
   text-align: center;
-  box-shadow: 0 8rpx 30rpx rgba(0,0,0,0.35);
-  width: 600rpx;
-  left: 50%;
-  transform: translateX(-50%);
 }
 
-.guide-tip-btns { top: 830rpx; }
-.guide-tip-img  { top: 470rpx; }
-.guide-tip-title { top: 260rpx; }
-.guide-tip-settings { top: 380rpx; }
+/* Step dots */
+.guide-dots {
+  display: flex;
+  justify-content: center;
+  gap: 16rpx;
+  margin-bottom: 24rpx;
+}
+
+.guide-dot {
+  width: 12rpx;
+  height: 12rpx;
+  border-radius: 6rpx;
+  background: #ddd;
+}
+
+.guide-dot-on {
+  background: #07C160;
+  width: 32rpx;
+}
+
+/* Card content */
+.guide-card-title {
+  font-size: 36rpx;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 20rpx;
+}
+
+.guide-card-desc {
+  font-size: 28rpx;
+  color: #555;
+  line-height: 1.7;
+  text-align: left;
+  margin-bottom: 36rpx;
+  padding: 0 8rpx;
+}
+
+.guide-card-btns {
+  display: flex;
+  gap: 24rpx;
+  justify-content: center;
+}
 
 .guide-em {
   color: #07C160;
   font-weight: bold;
-}
-
-/* ── Bottom hint ──────────────────── */
-.guide-foot {
-  position: absolute;
-  bottom: 80rpx;
-  left: 0; right: 0;
-  text-align: center;
-  font-size: 26rpx;
-  color: rgba(255, 255, 255, 0.4);
 }

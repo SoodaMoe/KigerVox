@@ -86,54 +86,43 @@
 </view>
 
 <!-- ═══ New User Guide ═══ -->
-<block wx:if="{{guideStep >= 0}}">
 
-  <!-- Step 0: dialog -->
-  <view class="guide-mask" wx:if="{{guideStep === 0}}" catchtap="noop">
-    <view class="guide-dialog">
-      <view class="guide-dialog-title">新手指引</view>
-      <view class="guide-dialog-body">检测到你是第一次使用，是否需要新手指引？</view>
-      <view class="guide-dialog-btns">
-        <button class="guide-btn guide-btn-no" bindtap="onGuideNo">跳过</button>
-        <button class="guide-btn guide-btn-yes" bindtap="onGuideYes">开始指引</button>
-      </view>
+<!-- Step 0: fullscreen dialog -->
+<view class="guide-mask" wx:if="{{guideStep === 0}}" catchtap="noop">
+  <view class="guide-dialog">
+    <view class="guide-dialog-title">新手指引</view>
+    <view class="guide-dialog-body">检测到你是第一次使用，是否需要新手指引？</view>
+    <view class="guide-dialog-btns">
+      <button class="guide-btn guide-btn-no" bindtap="onGuideNo">跳过</button>
+      <button class="guide-btn guide-btn-yes" bindtap="onGuideYes">开始指引</button>
     </view>
   </view>
+</view>
 
-  <!-- Step 1: text buttons -->
-  <view class="guide-step" wx:if="{{guideStep === 1}}" catchtap="onGuideNext">
-    <view class="guide-spot guide-spot-btns"></view>
-    <view class="guide-tip guide-tip-btns">
-      <text class="guide-em">点击</text><text>新建按钮，</text><text class="guide-em">长按</text><text>修改文字与是否朗读</text>
+<!-- Bottom card overlay for steps 1-4 -->
+<view class="guide-card" wx:if="{{guideStep >= 1}}">
+  <view class="guide-card-blocker" catchtap="onGuideNext"></view>
+  <view class="guide-card-inner" catchtap="noop">
+    <!-- Step indicators -->
+    <view class="guide-dots">
+      <view class="guide-dot {{guideStep === 1 ? 'guide-dot-on' : ''}}"></view>
+      <view class="guide-dot {{guideStep === 2 ? 'guide-dot-on' : ''}}"></view>
+      <view class="guide-dot {{guideStep === 3 ? 'guide-dot-on' : ''}}"></view>
+      <view class="guide-dot {{guideStep === 4 ? 'guide-dot-on' : ''}}"></view>
     </view>
-    <view class="guide-foot">轻触继续</view>
-  </view>
-
-  <!-- Step 2: image button -->
-  <view class="guide-step" wx:if="{{guideStep === 2}}" catchtap="onGuideNext">
-    <view class="guide-spot guide-spot-img"></view>
-    <view class="guide-tip guide-tip-img">
-      <text>在这里</text><text class="guide-em">长按</text><text>可以选择一张你的</text><text class="guide-em">扩列图</text><text>，单击这里就能展示</text>
+    <!-- Title -->
+    <view class="guide-card-title">{{guideStep === 1 ? '文字朗读' : (guideStep === 2 ? '图片展示' : (guideStep === 3 ? '修改标题' : 'API 设置'))}}</view>
+    <!-- Content -->
+    <view class="guide-card-desc">
+      <block wx:if="{{guideStep === 1}}"><text>点击右下角 </text><text class="guide-em">＋</text><text> 新建按钮；</text><text class="guide-em">点击</text><text>按钮可语音朗读文字；</text><text class="guide-em">长按</text><text>按钮可修改文字、切换静音模式或删除。</text></block>
+      <block wx:if="{{guideStep === 2}}"><text>在标题下方，</text><text class="guide-em">长按</text><text>这里可以选择一张你的</text><text class="guide-em">扩列图</text><text>，短按这里就能全屏展示图片。</text></block>
+      <block wx:if="{{guideStep === 3}}"><text class="guide-em">长按</text><text>顶部标题，可以把文字修改为自己的</text><text class="guide-em">CN</text><text>。</text></block>
+      <block wx:if="{{guideStep === 4}}"><text>右上角 </text><text class="guide-em">API 设置</text><text> 中可以配置</text><text class="guide-em">自己的 TTS API</text><text>，支持腾讯云、阿里云和自定义接口。</text></block>
     </view>
-    <view class="guide-foot">轻触继续</view>
-  </view>
-
-  <!-- Step 3: title -->
-  <view class="guide-step" wx:if="{{guideStep === 3}}" catchtap="onGuideNext">
-    <view class="guide-spot guide-spot-title"></view>
-    <view class="guide-tip guide-tip-title">
-      <text class="guide-em">长按</text><text>这里可以把文字修改为自己的</text><text class="guide-em">CN</text>
+    <!-- Buttons -->
+    <view class="guide-card-btns">
+      <button class="guide-btn guide-btn-no" bindtap="onGuideNo">跳过</button>
+      <button class="guide-btn guide-btn-yes" bindtap="onGuideNext">{{guideStep === 4 ? '完成' : '下一步'}}</button>
     </view>
-    <view class="guide-foot">轻触继续</view>
   </view>
-
-  <!-- Step 4: API settings -->
-  <view class="guide-step" wx:if="{{guideStep === 4}}" catchtap="onGuideNext">
-    <view class="guide-spot guide-spot-settings"></view>
-    <view class="guide-tip guide-tip-settings">
-      <text>在这里可以配置</text><text class="guide-em">自己的 TTS API</text><text>，支持腾讯云、阿里云和自定义接口</text>
-    </view>
-    <view class="guide-foot">轻触开始使用</view>
-  </view>
-
-</block>
+</view>
