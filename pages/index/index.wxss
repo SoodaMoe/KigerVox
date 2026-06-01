@@ -15,9 +15,11 @@
   margin-bottom: 12rpx;
 }
 
-.header-subtitle {
-  font-size: 28rpx;
-  color: #999;
+.footer-subtitle {
+  font-size: 26rpx;
+  color: #bbb;
+  display: block;
+  margin-bottom: 8rpx;
 }
 
 .toolbar {

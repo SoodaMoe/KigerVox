@@ -1,7 +1,6 @@
 <view class="container">
   <view class="header">
     <view class="header-title" bindlongpress="onHeaderLongPress">{{headerTitle}}</view>
-    <view class="header-subtitle">{{headerSubtitle}}</view>
   </view>
 
   <view class="toolbar">
@@ -48,6 +47,7 @@
   </view>
 
   <view class="footer">
+    <text class="footer-subtitle">{{headerSubtitle}}</text>
     <text class="footer-text">长按按钮可编辑或删除</text>
   </view>
 </view>
