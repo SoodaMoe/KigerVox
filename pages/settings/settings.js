@@ -157,7 +157,7 @@ Page({
 
     this.setData({ testing: true })
 
-    tts.textToSpeech('你好，这是语音合成测试。', {
+    tts.textToSpeech('你好，欢迎使用KigerVox！', {
       provider: p,
       voiceType: p === 'aliyun' ? this.data.aliVoice : (p === 'tencent' ? Number(this.data.tcVoice) : '101026'),
       speed: this.data.speed
