@@ -15,13 +15,6 @@
   margin-bottom: 12rpx;
 }
 
-.footer-subtitle {
-  font-size: 26rpx;
-  color: #bbb;
-  display: block;
-  margin-bottom: 8rpx;
-}
-
 .toolbar {
   display: flex;
   justify-content: flex-end;
@@ -139,6 +132,8 @@
 .footer-text {
   font-size: 24rpx;
   color: #ccc;
+  display: block;
+  line-height: 1.6;
 }
 
 .overlay {

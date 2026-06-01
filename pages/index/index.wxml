@@ -47,7 +47,7 @@
   </view>
 
   <view class="footer">
-    <text class="footer-subtitle">{{headerSubtitle}}</text>
+    <text class="footer-text">{{headerSubtitle}}</text>
     <text class="footer-text">长按按钮可编辑或删除</text>
   </view>
 </view>
