@@ -221,3 +221,17 @@
   border: 1rpx solid #e74c3c;
   padding: 0;
 }
+
+.author-section {
+  margin-top: 48rpx;
+  padding-top: 32rpx;
+  border-top: 1rpx solid #eee;
+  text-align: center;
+}
+
+.author-text {
+  display: block;
+  font-size: 22rpx;
+  color: #ccc;
+  line-height: 1.8;
+}

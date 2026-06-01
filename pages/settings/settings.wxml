@@ -126,4 +126,9 @@
     </view>
     <button class="btn cache-btn" bindtap="onClearCache">清除缓存</button>
   </view>
+
+  <view class="author-section">
+    <text class="author-text">作者：Bilibili@蘇打Sooda</text>
+    <text class="author-text">项目地址：https://github.com/SoodaMoe/KigerVox</text>
+  </view>
 </view>
