@@ -18,15 +18,15 @@
   </view>
 
   <view class="image-section">
-    <view class="guide-pin guide-pin-below" wx:if="{{guideStep === 2}}">
-      <text class="guide-pin-label">长按选择图片</text>
-      <view class="guide-pin-arrow guide-pin-arrow-up"></view>
-    </view>
-    <view class="image-btn {{imgSrc ? 'image-btn-active' : ''}}" bindtap="onImageTap" bindlongpress="onImageLongPress">
+    <view class="image-btn {{imgSrc ? 'image-btn-active' : ''}} {{guideStep === 2 ? 'guide-glow' : ''}}" bindtap="onImageTap" bindlongpress="onImageLongPress">
       <view class="image-btn-left">
         <text class="image-btn-label">{{imgLabel || '图片'}}</text>
       </view>
       <text class="image-btn-hint">短按显示；长按修改</text>
+    </view>
+    <view class="guide-pin guide-pin-below" wx:if="{{guideStep === 2}}">
+      <view class="guide-pin-arrow guide-pin-arrow-up"></view>
+      <text class="guide-pin-label">长按选择图片</text>
     </view>
   </view>
 
