@@ -1,15 +1,27 @@
 <view class="container">
   <view class="header">
-    <view class="header-title" bindlongpress="onHeaderLongPress">{{headerTitle}}</view>
+    <view class="header-title {{guideStep === 3 ? 'guide-glow' : ''}}" bindlongpress="onHeaderLongPress">{{headerTitle}}</view>
+    <view class="guide-pin guide-pin-below" wx:if="{{guideStep === 3}}">
+      <text class="guide-pin-label">长按修改为自己的 CN</text>
+      <view class="guide-pin-arrow guide-pin-arrow-up"></view>
+    </view>
   </view>
 
   <view class="toolbar">
-    <view class="toolbar-btn" bindtap="onOpenSettings">
+    <view class="guide-pin guide-pin-left" wx:if="{{guideStep === 4}}">
+      <text class="guide-pin-label">点这里配置 API</text>
+      <view class="guide-pin-arrow guide-pin-arrow-right"></view>
+    </view>
+    <view class="toolbar-btn {{guideStep === 4 ? 'guide-glow' : ''}}" bindtap="onOpenSettings">
       <text class="toolbar-text">API 设置</text>
     </view>
   </view>
 
   <view class="image-section">
+    <view class="guide-pin guide-pin-below" wx:if="{{guideStep === 2}}">
+      <text class="guide-pin-label">长按选择图片</text>
+      <view class="guide-pin-arrow guide-pin-arrow-up"></view>
+    </view>
     <view class="image-btn {{imgSrc ? 'image-btn-active' : ''}}" bindtap="onImageTap" bindlongpress="onImageLongPress">
       <view class="image-btn-left">
         <text class="image-btn-label">{{imgLabel || '图片'}}</text>
@@ -35,13 +47,18 @@
       </view>
     </view>
 
-    <view class="btn-card btn-add" bindtap="onAddButton">
+    <view class="btn-card btn-add {{guideStep === 1 ? 'guide-glow' : ''}}" bindtap="onAddButton">
       <view class="btn-card-body">
         <text class="add-icon">+</text>
       </view>
       <view class="btn-card-footer">
         <text class="btn-hint">添加按钮</text>
       </view>
+    </view>
+
+    <view class="guide-pin guide-pin-above" wx:if="{{guideStep === 1}}">
+      <text class="guide-pin-label">点击按钮朗读文字</text>
+      <view class="guide-pin-arrow guide-pin-arrow-down"></view>
     </view>
 
   </view>

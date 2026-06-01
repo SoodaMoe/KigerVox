@@ -315,6 +315,86 @@
 
 /* ═══════ New User Guide ═══════ */
 
+/* ── Glow pulse on target elements ── */
+.guide-glow {
+  animation: glow-pulse 1.2s ease-in-out infinite;
+}
+
+@keyframes glow-pulse {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(7, 193, 96, 0.4);
+    border-color: #07C160;
+  }
+  50% {
+    box-shadow: 0 0 0 12rpx rgba(7, 193, 96, 0);
+    border-color: #4AE084;
+  }
+}
+
+/* ── Pin indicators ──────────────── */
+.guide-pin {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 4900;
+}
+
+.guide-pin-label {
+  font-size: 24rpx;
+  color: #07C160;
+  font-weight: bold;
+  white-space: nowrap;
+}
+
+.guide-pin-arrow {
+  width: 0;
+  height: 0;
+  border-left: 10rpx solid transparent;
+  border-right: 10rpx solid transparent;
+  border-top: 12rpx solid #07C160;
+}
+
+.guide-pin-arrow-up {
+  border-top: none;
+  border-bottom: 12rpx solid #07C160;
+  order: -1;
+  margin-bottom: 4rpx;
+}
+
+.guide-pin-arrow-down {
+  order: 1;
+  margin-top: 4rpx;
+}
+
+/* Position: above the element, arrow points down */
+.guide-pin-above {
+  margin-bottom: 8rpx;
+}
+
+/* Position: below the element, arrow points up */
+.guide-pin-below {
+  margin-top: 8rpx;
+}
+
+/* Position: left of element, arrow points right */
+.guide-pin-left {
+  flex-direction: row;
+  margin-right: 12rpx;
+}
+
+.guide-pin-left .guide-pin-label {
+  order: 0;
+}
+
+.guide-pin-arrow-right {
+  border-top: 8rpx solid transparent;
+  border-bottom: 8rpx solid transparent;
+  border-left: 10rpx solid #07C160;
+  border-right: none;
+  margin-left: 6rpx;
+  order: 1;
+}
+
 /* ── Step 0: fullscreen dialog mask ─ */
 .guide-mask {
   position: fixed;
