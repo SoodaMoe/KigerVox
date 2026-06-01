@@ -196,6 +196,8 @@ Page({
     this.setData({ guideStep: 1 })
   },
 
+  noop() {},
+
   onGuideNo() {
     wx.setStorageSync('guideDone', true)
     this.setData({ guideStep: -1 })
