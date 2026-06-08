@@ -6,7 +6,7 @@ Page({
   data: {
     provider: 'server',
     providerIndex: 0,
-    providers: ['默认（免配置）', '腾讯云 TTS', '阿里云 TTS', '自定义 HTTP 接口'],
+    providers: ['默认（免配置）', '腾讯云 TTS', '阿里云 TTS', 'GPT-SoVITS'],
 
     // Server
     serverUrl: '',
@@ -22,9 +22,9 @@ Page({
     // Common
     speed: tts.defaultSpeed,
 
-    // Custom
-    apiUrl: '', apiMethod: 'POST', apiHeaders: '',
-    apiBodyTemplate: '{"text":"{text}","voice":"{voice}","speed":{speed}}',
+    // GPT-SoVITS
+    gsApiBase: '', gsRefAudioPath: '', gsPromptText: '',
+    gsPromptLang: 'zh', gsTextLang: 'zh', gsMediaType: 'wav',
 
     // Cache
     cacheSize: '', cacheCount: 0,
@@ -44,9 +44,9 @@ Page({
       aliKeyId: c.aliAccessKeyId || '', aliKeySecret: c.aliAccessKeySecret || '', aliAppKey: c.aliAppKey || '',
       aliVoice: c.aliVoice || 'xiaoyun', aliVoiceIndex: this.findVoice(c.aliVoice || 'xiaoyun', tts.aliyunVoices),
       speed: c.speed != null ? c.speed : tts.defaultSpeed,
-      apiUrl: c.apiUrl || '', apiMethod: c.apiMethod || 'POST',
-      apiHeaders: c.apiHeaders || '',
-      apiBodyTemplate: c.apiBodyTemplate || '{"text":"{text}","voice":"{voice}","speed":{speed}}'
+      gsApiBase: c.gsApiBase || '', gsRefAudioPath: c.gsRefAudioPath || '',
+      gsPromptText: c.gsPromptText || '', gsPromptLang: c.gsPromptLang || 'zh',
+      gsTextLang: c.gsTextLang || 'zh', gsMediaType: c.gsMediaType || 'wav'
     })
     this.refreshCacheStats()
   },
@@ -56,7 +56,7 @@ Page({
   providerToIndex(p) {
     if (p === 'tencent') return 1
     if (p === 'aliyun') return 2
-    if (p === 'custom') return 3
+    if (p === 'gptsovits') return 3
     return 0 // server
   },
 
@@ -78,7 +78,7 @@ Page({
   // ─── Provider ────────────────────────────────
   onProviderChange(e) {
     var idx = Number(e.detail.value)
-    var p = idx === 0 ? 'server' : (idx === 1 ? 'tencent' : (idx === 2 ? 'aliyun' : 'custom'))
+    var p = idx === 0 ? 'server' : (idx === 1 ? 'tencent' : (idx === 2 ? 'aliyun' : 'gptsovits'))
     this.setData({ providerIndex: idx, provider: p })
   },
 
@@ -104,11 +104,22 @@ Page({
   // ─── Common ──────────────────────────────────
   onSpeedChange(e) { this.setData({ speed: Number(e.detail.value) }) },
 
-  // ─── Custom ──────────────────────────────────
-  onApiUrl(e) { this.setData({ apiUrl: e.detail.value }) },
-  onApiMethod(e) { this.setData({ apiMethod: e.currentTarget.dataset.value }) },
-  onApiHeaders(e) { this.setData({ apiHeaders: e.detail.value }) },
-  onApiBody(e) { this.setData({ apiBodyTemplate: e.detail.value }) },
+  // ─── GPT-SoVITS ───────────────────────────────
+  onGsApiBase(e) { this.setData({ gsApiBase: e.detail.value }) },
+  onGsRefAudioPath(e) { this.setData({ gsRefAudioPath: e.detail.value }) },
+  onGsPromptText(e) { this.setData({ gsPromptText: e.detail.value }) },
+  onGsPromptLang(e) {
+    var langs = ['zh', 'en', 'ja']
+    this.setData({ gsPromptLang: langs[Number(e.detail.value)] })
+  },
+  onGsTextLang(e) {
+    var langs = ['zh', 'en', 'ja', 'auto']
+    this.setData({ gsTextLang: langs[Number(e.detail.value)] })
+  },
+  onGsMediaType(e) {
+    var types = ['wav', 'mp3', 'ogg', 'aac']
+    this.setData({ gsMediaType: types[Number(e.detail.value)] })
+  },
 
   // ─── Save ────────────────────────────────────
   onSave() {
@@ -122,7 +133,8 @@ Page({
       if (!this.data.aliKeySecret.trim()) { wx.showToast({ title: '请输入 AccessKey Secret', icon: 'none' }); return }
       if (!this.data.aliAppKey.trim()) { wx.showToast({ title: '请输入 AppKey', icon: 'none' }); return }
     } else {
-      if (!this.data.apiUrl.trim()) { wx.showToast({ title: '请输入 API 地址', icon: 'none' }); return }
+      if (!this.data.gsApiBase.trim()) { wx.showToast({ title: '请输入 API 地址', icon: 'none' }); return }
+      if (!this.data.gsRefAudioPath.trim()) { wx.showToast({ title: '请输入参考音频路径', icon: 'none' }); return }
     }
 
     tts.saveConfig({
@@ -133,8 +145,9 @@ Page({
       aliAccessKeyId: this.data.aliKeyId.trim(), aliAccessKeySecret: this.data.aliKeySecret.trim(),
       aliAppKey: this.data.aliAppKey.trim(), aliVoice: this.data.aliVoice,
       speed: this.data.speed,
-      apiUrl: this.data.apiUrl.trim(), apiMethod: this.data.apiMethod,
-      apiHeaders: this.data.apiHeaders, apiBodyTemplate: this.data.apiBodyTemplate
+      gsApiBase: this.data.gsApiBase.trim(), gsRefAudioPath: this.data.gsRefAudioPath.trim(),
+      gsPromptText: this.data.gsPromptText, gsPromptLang: this.data.gsPromptLang,
+      gsTextLang: this.data.gsTextLang, gsMediaType: this.data.gsMediaType
     })
 
     wx.showToast({ title: '保存成功', icon: 'success' })
@@ -152,14 +165,15 @@ Page({
         wx.showToast({ title: '请先填写阿里云 API 密钥和 AppKey', icon: 'none' }); return
       }
     } else {
-      if (!this.data.apiUrl.trim()) { wx.showToast({ title: '请先填写 API 地址', icon: 'none' }); return }
+      if (!this.data.gsApiBase.trim()) { wx.showToast({ title: '请先填写 API 地址', icon: 'none' }); return }
+      if (!this.data.gsRefAudioPath.trim()) { wx.showToast({ title: '请先填写参考音频路径', icon: 'none' }); return }
     }
 
     this.setData({ testing: true })
 
     tts.textToSpeech('你好，欢迎使用KigerVox！', {
       provider: p,
-      voiceType: p === 'aliyun' ? this.data.aliVoice : (p === 'tencent' ? Number(this.data.tcVoice) : '101026'),
+      voiceType: p === 'aliyun' ? this.data.aliVoice : (p === 'tencent' ? Number(this.data.tcVoice) : ''),
       speed: this.data.speed
     }).then(function(fp) {
       self.setData({ testing: false })

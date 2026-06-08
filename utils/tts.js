@@ -17,8 +17,9 @@ function defaultConfig() {
     aliAccessKeyId: '', aliAccessKeySecret: '', aliAppKey: '', aliVoice: 'xiaoyun',
     // Common
     speed: 0,
-    // Custom HTTP
-    apiUrl: '', apiMethod: 'POST', apiHeaders: '', apiBodyTemplate: ''
+    // GPT-SoVITS
+    gsApiBase: '', gsRefAudioPath: '', gsPromptText: '',
+    gsPromptLang: 'zh', gsTextLang: 'zh', gsMediaType: 'wav'
   }
 }
 
@@ -29,15 +30,18 @@ function getConfig() {
   c.speed = c.speed != null ? c.speed : 0
   c.serverUrl = c.serverUrl || DEFAULT_SERVER_URL
   // migrate legacy keys
+  if (c.provider === 'custom') c.provider = 'gptsovits'
   if (!c.tencentVoice && c.voiceType) c.tencentVoice = c.voiceType
   if (!c.aliAccessKeyId) c.aliAccessKeyId = ''
   if (!c.aliAccessKeySecret) c.aliAccessKeySecret = ''
   if (!c.aliAppKey) c.aliAppKey = ''
   if (!c.aliVoice) c.aliVoice = 'xiaoyun'
-  if (!c.apiUrl) c.apiUrl = ''
-  c.apiMethod = c.apiMethod || 'POST'
-  c.apiHeaders = c.apiHeaders || ''
-  c.apiBodyTemplate = c.apiBodyTemplate || ''
+  if (!c.gsApiBase) c.gsApiBase = ''
+  if (!c.gsRefAudioPath) c.gsRefAudioPath = ''
+  if (!c.gsPromptText) c.gsPromptText = ''
+  if (!c.gsPromptLang) c.gsPromptLang = 'zh'
+  if (!c.gsTextLang) c.gsTextLang = 'zh'
+  if (!c.gsMediaType) c.gsMediaType = 'wav'
   return c
 }
 
@@ -53,8 +57,8 @@ function textToSpeech(text, options) {
     voice = (options && options.voiceType) || config.aliVoice || 'xiaoyun'
   } else if (provider === 'server') {
     voice = (options && options.voiceType) || '101026'
-  } else if (provider === 'custom') {
-    voice = (options && options.voiceType) || ''
+  } else if (provider === 'gptsovits') {
+    voice = (options && options.voiceType) || config.gsRefAudioPath || ''
   } else {
     voice = (options && options.voiceType) || String(config.tencentVoice || 101026)
   }
@@ -66,7 +70,7 @@ function textToSpeech(text, options) {
     var task
     if (provider === 'tencent')  task = textToSpeechTencent(text, config, options, voice, speed)
     else if (provider === 'aliyun')   task = textToSpeechAliyun(text, config, options, voice, speed)
-    else if (provider === 'custom')   task = textToSpeechCustom(text, config, options, voice, speed)
+    else if (provider === 'gptsovits') task = textToSpeechGptSovits(text, config, options, voice, speed)
     else if (provider === 'server')   task = textToSpeechServer(text, config, options, voice, speed)
     else return Promise.reject(new Error('未知供应商: ' + provider))
 
@@ -252,41 +256,37 @@ function textToSpeechAliyun(text, config, options, voice, speed) {
   })
 }
 
-// ═══════════════════ Custom HTTP (via server proxy) ═══════════
-function textToSpeechCustom(text, config, options, voice, speed) {
+// ═══════════════════ GPT-SoVITS (via server proxy) ══════════
+function textToSpeechGptSovits(text, config, options, voice, speed) {
   return new Promise(function(resolve, reject) {
-    if (!config.apiUrl || !config.apiUrl.trim()) {
-      reject(new Error('请先设置自定义 API 地址')); return
+    var apiBase = config.gsApiBase || ''
+    if (!apiBase) {
+      reject(new Error('请先设置 GPT-SoVITS API 地址')); return
     }
-    var method = (config.apiMethod || 'POST').toUpperCase()
     var serverUrl = config.serverUrl || DEFAULT_SERVER_URL
     if (!serverUrl) {
       reject(new Error('服务器地址未配置')); return
     }
 
-    var url = config.apiUrl.trim()
-    url = url.split('{text}').join(encodeURIComponent(text))
-    url = url.split('{voice}').join(encodeURIComponent(String(voice)))
-    url = url.split('{speed}').join(encodeURIComponent(String(speed)))
-    url = url.split('{volume}').join(encodeURIComponent(String(VOLUME)))
+    // Build GPT-SoVITS target URL
+    var targetUrl = apiBase.replace(/\/$/, '') + '/tts'
 
-    var headers = {}
-    try { var h = JSON.parse(config.apiHeaders || '{}'); for (var k in h) headers[k] = h[k] } catch(e) {}
-
-    var body = ''
-    if (method === 'POST') {
-      body = config.apiBodyTemplate || '{"text":"{text}","voice":"{voice}","speed":{speed},"volume":{volume}}'
-      body = body.split('{text}').join(jsonEsc(text))
-      body = body.split('{voice}').join(jsonEsc(String(voice)))
-      body = body.split('{speed}').join(String(speed))
-      body = body.split('{volume}').join(String(VOLUME))
-    }
+    // Build GPT-SoVITS request body (native format)
+    var gsBody = JSON.stringify({
+      text: text,
+      text_lang: config.gsTextLang || 'zh',
+      ref_audio_path: config.gsRefAudioPath || '',
+      prompt_lang: config.gsPromptLang || 'zh',
+      prompt_text: config.gsPromptText || '',
+      speed_factor: 1.0 + speed * 0.5,
+      media_type: config.gsMediaType || 'wav'
+    })
 
     wx.request({
       url: serverUrl + '/api/proxy-tts',
       method: 'POST',
       header: { 'Content-Type': 'application/json' },
-      data: { url: url, method: method, headers: headers, body: body },
+      data: { url: targetUrl, method: 'POST', headers: {}, body: gsBody },
       responseType: 'arraybuffer',
       success: function(res) {
         if (res.statusCode === 200) {
@@ -294,11 +294,11 @@ function textToSpeechCustom(text, config, options, voice, speed) {
         } else {
           try {
             var err = JSON.parse(buf2str(res.data))
-            reject(new Error(err.error || '代理请求失败 HTTP ' + res.statusCode))
-          } catch(e) { reject(new Error('代理请求失败: HTTP ' + res.statusCode)) }
+            reject(new Error(err.error || 'GPT-SoVITS 请求失败 HTTP ' + res.statusCode))
+          } catch(e) { reject(new Error('GPT-SoVITS 请求失败: HTTP ' + res.statusCode)) }
         }
       },
-      fail: function(err) { reject(new Error('服务器连接失败: ' + err.errMsg + '\n\n[诊断] 目标: ' + url + '\n方法: ' + method + '\n请求体: ' + body.substring(0, 200))) }
+      fail: function(err) { reject(new Error('服务器连接失败: ' + err.errMsg + '\n\n[诊断] GPT-SoVITS → ' + targetUrl)) }
     })
   })
 }
