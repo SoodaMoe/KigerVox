@@ -7,3 +7,4 @@ miniprogram_npm/
 __pycache__/
 .DS_Store
 Thumbs.db
+server_files/config.json

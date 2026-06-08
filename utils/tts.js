@@ -286,7 +286,7 @@ function textToSpeechCustom(text, config, options, voice, speed) {
       url: serverUrl + '/api/proxy-tts',
       method: 'POST',
       header: { 'Content-Type': 'application/json' },
-      data: JSON.stringify({ url: url, method: method, headers: headers, body: body }),
+      data: { url: url, method: method, headers: headers, body: body },
       responseType: 'arraybuffer',
       success: function(res) {
         if (res.statusCode === 200) {
@@ -298,7 +298,7 @@ function textToSpeechCustom(text, config, options, voice, speed) {
           } catch(e) { reject(new Error('代理请求失败: HTTP ' + res.statusCode)) }
         }
       },
-      fail: function(err) { reject(new Error('服务器连接失败: ' + err.errMsg)) }
+      fail: function(err) { reject(new Error('服务器连接失败: ' + err.errMsg + '\n\n[诊断] 目标: ' + url + '\n方法: ' + method + '\n请求体: ' + body.substring(0, 200))) }
     })
   })
 }

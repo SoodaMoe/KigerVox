@@ -125,7 +125,7 @@ function clearAll() {
     function delNext() {
       if (deleted >= keys.length) { saveIndex({}); resolve(); return }
       try {
-        fs.unlink({ path: cachePath(keys[deleted]), success: function () { deleted++; delNext() }, fail: function () { deleted++; delNext() } })
+        fs.unlink({ filePath: cachePath(keys[deleted]), success: function () { deleted++; delNext() }, fail: function () { deleted++; delNext() } })
       } catch (e) { deleted++; delNext() }
     }
     if (keys.length === 0) { resolve(); return }

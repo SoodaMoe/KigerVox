@@ -10,7 +10,7 @@ POST /api/proxy-tts  { url, method, headers, body }
 All users share the same cache for /api/tts; proxy requests are never cached server-side.
 
 Setup:
-  1. Fill in SECRET_ID and SECRET_KEY below
+  1. Copy config.example.json to config.json and fill in your credentials
   2. apt install -y ffmpeg
   3. python server.py
   4. Update DEFAULT_SERVER_URL in utils/tts.js
@@ -31,9 +31,17 @@ from pathlib import Path
 from urllib.request import Request, urlopen
 from urllib.error import URLError
 
-# ═════════════ CONFIGURE THESE ═════════════
-SECRET_ID = "your-secret-id-here"
-SECRET_KEY = "your-secret-key-here"
+# ═════════════ Load config ═════════════
+CONFIG_PATH = Path(__file__).parent / "config.json"
+try:
+    with open(CONFIG_PATH, "r", encoding="utf-8") as f:
+        _config = json.load(f)
+    SECRET_ID = _config.get("secret_id", "")
+    SECRET_KEY = _config.get("secret_key", "")
+except (FileNotFoundError, json.JSONDecodeError) as e:
+    print(f"[init] WARNING: config.json not found or invalid ({e}), using placeholders")
+    SECRET_ID = "your-secret-id-here"
+    SECRET_KEY = "your-secret-key-here"
 PORT = int(os.environ.get("PORT", 53824))
 CACHE_DIR = Path(__file__).parent / "cache"
 MAX_CACHE_SIZE = 5 * 1024 * 1024 * 1024  # 5GB
@@ -198,22 +206,29 @@ def proxy_custom_tts(payload: dict) -> bytes:
 
     data = body.encode("utf-8") if method == "POST" and body else None
 
-    req = Request(url, data=data, headers=req_headers, method=method)
+    print(f"[proxy] {method} {url} body={body[:100]}")
 
     try:
-        with urlopen(req, timeout=30) as resp:
+        req = Request(url, data=data, headers=req_headers, method=method)
+        with urlopen(req, timeout=60) as resp:
             audio = resp.read()
             ct = resp.headers.get("Content-Type", "")
+            print(f"[proxy] OK {len(audio)} bytes ct={ct[:50]}")
             # If response is JSON with base64 audio field, decode it
             if "json" in ct:
                 resp_json = json.loads(audio.decode("utf-8"))
                 b64 = resp_json.get("audio") or resp_json.get("Audio") or resp_json.get("data") or resp_json.get("Data") or ""
                 if b64:
                     return base64.b64decode(b64)
-                raise RuntimeError("No audio field in JSON response")
+                raise RuntimeError("No audio field in JSON response (keys: " + str(list(resp_json.keys())[:5]) + ")")
             return audio
     except URLError as e:
-        raise RuntimeError(f"Proxy request failed: {e}")
+        detail = str(e)
+        if hasattr(e, 'read'):
+            try: detail += " | body: " + e.read().decode("utf-8", errors="replace")[:300]
+            except: pass
+        print(f"[proxy] FAIL {method} {url}: {detail}")
+        raise RuntimeError(f"Proxy request failed: {detail}")
 
 
 class TTSHandler(BaseHTTPRequestHandler):
@@ -240,10 +255,15 @@ class TTSHandler(BaseHTTPRequestHandler):
             return self._send_json(404, {"error": "Not found"})
 
         content_len = int(self.headers.get("Content-Length", 0))
+        raw = self.rfile.read(content_len)
         try:
-            body = json.loads(self.rfile.read(content_len))
-        except json.JSONDecodeError:
-            return self._send_json(400, {"error": "Invalid JSON"})
+            body = json.loads(raw)
+        except (json.JSONDecodeError, UnicodeDecodeError):
+            # WeChat Mini Program may send data in system encoding (e.g. GBK)
+            try:
+                body = json.loads(raw.decode("gbk", errors="replace"))
+            except Exception:
+                return self._send_json(400, {"error": "Invalid JSON"})
 
         # ─── Proxy TTS (no server cache) ───
         if self.path == "/api/proxy-tts":
