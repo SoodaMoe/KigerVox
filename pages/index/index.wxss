@@ -42,8 +42,8 @@
 }
 
 .btn-card {
-  width: 31%;
-  margin-right: 3.5%;
+  width: calc((100% - 56rpx) / 3);
+  margin-right: 28rpx;
   background: #fff;
   border-radius: 16rpx;
   box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.08);
