@@ -134,7 +134,6 @@ Page({
       if (!this.data.aliAppKey.trim()) { wx.showToast({ title: '请输入 AppKey', icon: 'none' }); return }
     } else {
       if (!this.data.gsApiBase.trim()) { wx.showToast({ title: '请输入 API 地址', icon: 'none' }); return }
-      if (!this.data.gsRefAudioPath.trim()) { wx.showToast({ title: '请输入参考音频路径', icon: 'none' }); return }
     }
 
     tts.saveConfig({
@@ -145,8 +144,7 @@ Page({
       aliAccessKeyId: this.data.aliKeyId.trim(), aliAccessKeySecret: this.data.aliKeySecret.trim(),
       aliAppKey: this.data.aliAppKey.trim(), aliVoice: this.data.aliVoice,
       speed: this.data.speed,
-      gsApiBase: this.data.gsApiBase.trim(), gsRefAudioPath: this.data.gsRefAudioPath.trim(),
-      gsPromptText: this.data.gsPromptText, gsPromptLang: this.data.gsPromptLang,
+      gsApiBase: this.data.gsApiBase.trim(),
       gsTextLang: this.data.gsTextLang, gsMediaType: this.data.gsMediaType
     })
 
@@ -166,7 +164,6 @@ Page({
       }
     } else {
       if (!this.data.gsApiBase.trim()) { wx.showToast({ title: '请先填写 API 地址', icon: 'none' }); return }
-      if (!this.data.gsRefAudioPath.trim()) { wx.showToast({ title: '请先填写参考音频路径', icon: 'none' }); return }
     }
 
     this.setData({ testing: true })

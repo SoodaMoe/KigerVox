@@ -89,31 +89,15 @@
   <block wx:if="{{provider === 'gptsovits'}}">
     <view class="section">
       <view class="section-title">GPT-SoVITS 配置</view>
-      <view class="section-hint">连接你的 GPT-SoVITS 实例。需要在服务器上提前放置参考音频并配置路径。通过代理服务器转发请求。</view>
+      <view class="section-hint">连接运行 GPT-SoVITS 的 API 地址（默认端口 8000）。参考音频在服务端预配置，无需在此填写。</view>
     </view>
 
     <view class="section"><view class="field-label">API 地址</view>
-      <input class="input" value="{{gsApiBase}}" bindinput="onGsApiBase" placeholder="http://192.168.1.100:9880"/></view>
-
-    <view class="section"><view class="field-label">参考音频路径</view>
-      <input class="input" value="{{gsRefAudioPath}}" bindinput="onGsRefAudioPath" placeholder="/path/to/reference.wav"/></view>
-
-    <view class="section"><view class="field-label">参考文本</view>
-      <input class="input" value="{{gsPromptText}}" bindinput="onGsPromptText" placeholder="参考音频对应的文本内容"/></view>
-
-    <view class="section"><view class="field-label">参考语言</view>
-      <picker mode="selector" range="{{['zh','en','ja']}}" value="{{gsPromptLang === 'zh' ? 0 : (gsPromptLang === 'en' ? 1 : 2)}}" bindchange="onGsPromptLang">
-        <view class="picker"><text>{{gsPromptLang}}</text><text class="picker-arrow">></text></view>
-      </picker></view>
+      <input class="input" value="{{gsApiBase}}" bindinput="onGsApiBase" placeholder="http://192.168.1.100:8000"/></view>
 
     <view class="section"><view class="field-label">文本语言</view>
       <picker mode="selector" range="{{['zh','en','ja','auto']}}" value="{{gsTextLang === 'zh' ? 0 : (gsTextLang === 'en' ? 1 : (gsTextLang === 'ja' ? 2 : 3))}}" bindchange="onGsTextLang">
         <view class="picker"><text>{{gsTextLang}}</text><text class="picker-arrow">></text></view>
-      </picker></view>
-
-    <view class="section"><view class="field-label">输出格式</view>
-      <picker mode="selector" range="{{['wav','mp3','ogg','aac']}}" value="{{gsMediaType === 'wav' ? 0 : (gsMediaType === 'mp3' ? 1 : (gsMediaType === 'ogg' ? 2 : 3))}}" bindchange="onGsMediaType">
-        <view class="picker"><text>{{gsMediaType}}</text><text class="picker-arrow">></text></view>
       </picker></view>
 
     <view class="section"><view class="field-label">语速：{{speed >= 0 ? '+' : ''}}{{speed}}</view>
