@@ -89,11 +89,11 @@
   <block wx:if="{{provider === 'gptsovits'}}">
     <view class="section">
       <view class="section-title">GPT-SoVITS 配置</view>
-      <view class="section-hint">连接运行 GPT-SoVITS 的 API 地址（默认端口 8000）。参考音频在服务端预配置，无需在此填写。</view>
+      <view class="section-hint">直连 GPT-SoVITS 原生 API（默认端口 9880）。参考音频需在启动时通过 -dr 参数预配置。</view>
     </view>
 
     <view class="section"><view class="field-label">API 地址</view>
-      <input class="input" value="{{gsApiBase}}" bindinput="onGsApiBase" placeholder="http://192.168.1.100:8000"/></view>
+      <input class="input" value="{{gsApiBase}}" bindinput="onGsApiBase" placeholder="http://192.168.1.100:9880"/></view>
 
     <view class="section"><view class="field-label">文本语言</view>
       <picker mode="selector" range="{{['zh','en','ja','auto']}}" value="{{gsTextLang === 'zh' ? 0 : (gsTextLang === 'en' ? 1 : (gsTextLang === 'ja' ? 2 : 3))}}" bindchange="onGsTextLang">

@@ -268,14 +268,13 @@ function textToSpeechGptSovits(text, config, options, voice, speed) {
       reject(new Error('服务器地址未配置')); return
     }
 
-    // Build wrapper API target URL: POST {apiBase}/api/tts
-    var targetUrl = apiBase.replace(/\/$/, '') + '/api/tts'
+    // GPT-SoVITS native API root, POST with JSON body
+    var targetUrl = apiBase.replace(/\/$/, '')
 
-    // The wrapper (api_server.py) expects: {text, text_language, speed}
     var gsBody = JSON.stringify({
       text: text,
       text_language: config.gsTextLang || 'zh',
-      speed: 1.0 + speed * 0.5
+      speed_factor: 1.0 + speed * 0.5
     })
 
     wx.request({
